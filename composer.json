@@ -1,0 +1,18 @@
+{
+  "name": "Bootpay/BootpayRestApi",
+  "description": "부트페이 REST API Client 버전입니다.",
+  "require": {
+    "php": "^5.4.0 || ^7.0"
+  },
+  "authors": [
+    {
+      "name": "gosomi",
+      "email": "gosomi@bootpay.co.kr"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Bootpay\\Rest\\": ""
+    }
+  }
+}
