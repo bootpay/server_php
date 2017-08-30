@@ -13,7 +13,7 @@ class BootpayApi
 
     private $defaultParams = [];
 
-    const BASE_URL = 'https://dev-api.bootpay.co.kr/';
+    const BASE_URL = 'https://api.bootpay.co.kr/';
     const URL_CONFIRM = self::BASE_URL . 'receipt/';
     const URL_CANCEL = self::BASE_URL . 'cancel';
 
