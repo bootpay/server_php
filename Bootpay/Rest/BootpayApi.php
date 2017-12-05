@@ -46,7 +46,7 @@ class BootpayApi
 
     public function confirmInstance($data)
     {
-        return self::get(self::URL_CONFIRM . $data['receipt_id'], $data);
+        return self::get(self::URL_CONFIRM . $data['receipt_id'] . "?" . http_build_query($data), []);
     }
 
 //  공통 부분
