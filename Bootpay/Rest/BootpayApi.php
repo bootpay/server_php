@@ -30,13 +30,13 @@ class BootpayApi
     public static function confirm($data)
     {
         $payload = array_merge($data, static::$instances->defaultParams);
-        static::$instances->confirmInstance($payload);
+        return static::$instances->confirmInstance($payload);
     }
 
     public static function cancel($data)
     {
         $payload = array_merge($data, static::$instances->defaultParams);
-        static::$instances->cancelInstance($payload);
+        return static::$instances->cancelInstance($payload);
     }
 
     public function cancelInstance($data)
