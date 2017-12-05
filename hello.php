@@ -17,15 +17,19 @@ use Bootpay\Rest\BootpayApi;
 <form method="post" name="LGD_PAYINFO" id="LGD_PAYINFO">
     <?php
     $instance = BootpayApi::setConfig('rest application_id', 'pk');
-    BootpayApi::cancel([
+    $responseCancel = BootpayApi::cancel([
         'receipt_id' => 'receipt_id',
         'name' => 'name',
         'reason' => 'reason'
     ]);
 
-    BootpayApi::confirm([
+    echo "status: {$responseCancel->status}, code: {$responseCancel->code}, message: {$responseCancel->message}";
+
+    $responseConfirm = BootpayApi::confirm([
         'receipt_id' => 'receipt_id'
     ]);
+
+    echo "status: {$responseConfirm->status}, code: {$responseConfirm->code}, message: {$responseConfirm->message}";
     ?>
 </form>
 </body>
