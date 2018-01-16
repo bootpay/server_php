@@ -10,4 +10,33 @@
 * 부트페이 서버와 통신시 Rest용 Application Id, Private Key 값을 보내주셔야 하며, 보내실 서버의 IP는 미리 등록하셔야 합니다.
 
 
+
+## 샘플 코드
+```php
+<?php
+  spl_autoload_register();
+  use Bootpay\Rest\BootpayApi;
+?>
+<html>
+  <head>
+      <title>PHP 테스트</title>
+  </head>
+<body>
+  <script type="text/javascript">
+  </script>
+
+    <form method="post" name="BOOTPAY_TEST" id="BOOTPAY_TEST">
+        <?php
+          $instance = BootpayApi::setConfig('rest application_id', 'pk');
+          $responseConfirm = BootpayApi::confirm([
+              'receipt_id' => 'receipt_id'
+          ]);
+
+          echo "status: {$responseConfirm->status}, code: {$responseConfirm->code}, message: {$responseConfirm->message}";
+        ?>
+    </form>
+  </body>
+</html>
+```
+
 ### 더 자세한 정보는 [Docs](https://docs.bootpay.co.kr/api/validate)를 참조해주세요. 
