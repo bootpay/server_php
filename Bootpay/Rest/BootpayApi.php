@@ -14,6 +14,7 @@ class BootpayApi
 
     public $mode = '';
     private $defaultParams = [];
+    private $accessToken = null;
 
     private $baseUrl = [
         'development' => 'https://dev-api.bootpay.co.kr',
@@ -33,19 +34,21 @@ class BootpayApi
 
     public static function requestAccessToken()
     {
-        return static::$instances->tokenInstance(static::$instances->defaultParams);
+        $result = static::$instances->tokenInstance(static::$instances->defaultParams);
+        if ($result->status === 200) {
+            static::$instances->setAccessToken($result->data->token);
+        }
+        return $result;
     }
 
-    public static function confirm($data)
+    public static function verify($receiptId)
     {
-        $payload = array_merge($data, static::$instances->defaultParams);
-        return static::$instances->confirmInstance($payload);
+        return static::$instances->verifyInstance($receiptId);
     }
 
-    public static function cancel($data)
+    public static function cancel($receiptId)
     {
-        $payload = array_merge($data, static::$instances->defaultParams);
-        return static::$instances->cancelInstance($payload);
+        return static::$instances->cancelInstance($receiptId);
     }
 
     private function getRestUrl()
@@ -53,14 +56,33 @@ class BootpayApi
         return $this->baseUrl[$this->mode];
     }
 
-    public function cancelInstance($data)
+    public function setAccessToken($token)
     {
-        return self::post(implode('/', [$this->getRestUrl(), 'cancel']), $data);
+        return $this->accessToken = $token;
     }
 
-    public function confirmInstance($data)
+    public function cancelInstance($receiptId)
     {
-        return self::get(implode('/', [$this->getRestUrl(), 'receipt', $data['receipt_id'] . "?" . http_build_query($data)]), []);
+        return self::post(
+            implode('/', [$this->getRestUrl(), 'cancel']),
+            [
+                'receipt_id' => $receiptId
+            ],
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
+    public function verifyInstance($receiptId)
+    {
+        return self::get(
+            implode('/', [$this->getRestUrl(), 'receipt', $receiptId]),
+            [],
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
     }
 
     public function tokenInstance($data)
@@ -69,15 +91,15 @@ class BootpayApi
     }
 
 //  공통 부분
-    public static function get($url, $data)
+    public static function get($url, $data, $headers = [])
     {
-        $ch = self::getCurlHandler($url, $data, false);
+        $ch = self::getCurlHandler($url, $data, false, $headers);
         return self::execute($ch);
     }
 
-    public static function post($url, $data)
+    public static function post($url, $data, $headers = [])
     {
-        $ch = self::getCurlHandler($url, $data, true);
+        $ch = self::getCurlHandler($url, $data, true, $headers);
         return self::execute($ch);
     }
 
@@ -93,9 +115,9 @@ class BootpayApi
         return $json;
     }
 
-    private static function getCurlHandler($url, $data = array(), $isPost = true)
+    private static function getCurlHandler($url, $data = array(), $isPost = true, $headers = [])
     {
-        $headers = array('Content-Type: application/json');
+        $headers = array_merge(['Content-Type: application/json'], $headers);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, $isPost);
