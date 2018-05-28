@@ -1,5 +1,6 @@
 <?php
-spl_autoload_register();
+require_once('../autoload.php');
+spl_autoload_register('BootpayAutoload');
 
 use Bootpay\Rest\BootpayApi;
 
