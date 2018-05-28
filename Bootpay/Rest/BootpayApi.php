@@ -1,4 +1,5 @@
 <?php
+
 namespace Bootpay\Rest;
 
 /**
@@ -11,20 +12,28 @@ class BootpayApi
 {
     use Singleton;
 
+    public $mode = '';
     private $defaultParams = [];
 
-    const BASE_URL = 'https://api.bootpay.co.kr/';
-    const URL_CONFIRM = self::BASE_URL . 'receipt/';
-    const URL_CANCEL = self::BASE_URL . 'cancel';
+    private $baseUrl = [
+        'development' => 'https://dev-api.bootpay.co.kr',
+        'production' => 'https://api.bootpay.co.kr'
+    ];
 
-    public static function setConfig($applicationId, $privateKey)
+    public static function setConfig($applicationId, $privateKey, $mode = 'production')
     {
         static::instance();
         static::$instances->defaultParams = [
             'application_id' => $applicationId,
             'private_key' => $privateKey
         ];
+        static::$instances->mode = $mode;
         return static::$instances;
+    }
+
+    public static function requestAccessToken()
+    {
+        return static::$instances->tokenInstance(static::$instances->defaultParams);
     }
 
     public static function confirm($data)
@@ -39,30 +48,40 @@ class BootpayApi
         return static::$instances->cancelInstance($payload);
     }
 
+    private function getRestUrl()
+    {
+        return $this->baseUrl[$this->mode];
+    }
+
     public function cancelInstance($data)
     {
-        return self::post(self::URL_CANCEL, $data);
+        return self::post(implode('/', [$this->getRestUrl(), 'cancel']), $data);
     }
 
     public function confirmInstance($data)
     {
-        return self::get(self::URL_CONFIRM . $data['receipt_id'] . "?" . http_build_query($data), []);
+        return self::get(implode('/', [$this->getRestUrl(), 'receipt', $data['receipt_id'] . "?" . http_build_query($data)]), []);
+    }
+
+    public function tokenInstance($data)
+    {
+        return self::post(implode('/', [$this->getRestUrl(), 'request', 'token']), $data);
     }
 
 //  공통 부분
     public static function get($url, $data)
     {
         $ch = self::getCurlHandler($url, $data, false);
-        return self::excute($ch);
+        return self::execute($ch);
     }
 
     public static function post($url, $data)
     {
         $ch = self::getCurlHandler($url, $data, true);
-        return self::excute($ch);
+        return self::execute($ch);
     }
 
-    private static function excute($ch)
+    private static function execute($ch)
     {
         $response = curl_exec($ch);
         $errno = curl_errno($ch);
