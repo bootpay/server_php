@@ -51,6 +51,11 @@ class BootpayApi
         return static::$instances->cancelInstance($receiptId);
     }
 
+    public static function subscribeCardBilling($data)
+    {
+        return static::$instances->subscribeCardBillingInstance($data);
+    }
+
     private function getRestUrl()
     {
         return $this->baseUrl[$this->mode];
@@ -79,6 +84,17 @@ class BootpayApi
         return self::get(
             implode('/', [$this->getRestUrl(), 'receipt', $receiptId]),
             [],
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
+    public function subscribeCardBillingInstance($data)
+    {
+        return self::post(
+            implode('/', [$this->getRestUrl(), 'subscribe', 'billing.json']),
+            $data,
             [
                 "Authorization: {$this->accessToken}"
             ]

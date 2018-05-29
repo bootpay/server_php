@@ -1,4 +1,7 @@
 <?php
+/*
+ * 결제 검증 관련 예제입니다.
+ */
 require_once('../autoload.php');
 spl_autoload_register('BootpayAutoload');
 

@@ -1,4 +1,7 @@
 <?php
+/*
+ * Access Token 요청 예제입니다.
+ */
 require_once('../autoload.php');
 spl_autoload_register('BootpayAutoload');
 
