@@ -46,9 +46,9 @@ class BootpayApi
         return static::$instances->verifyInstance($receiptId);
     }
 
-    public static function cancel($receiptId)
+    public static function cancel($receiptId, $price = null, $name = null, $reason = null)
     {
-        return static::$instances->cancelInstance($receiptId);
+        return static::$instances->cancelInstance($receiptId, $price, $name, $reason);
     }
 
     public static function subscribeCardBilling($data)
@@ -66,12 +66,15 @@ class BootpayApi
         return $this->accessToken = $token;
     }
 
-    public function cancelInstance($receiptId)
+    public function cancelInstance($receiptId, $price, $name, $reason)
     {
         return self::post(
             implode('/', [$this->getRestUrl(), 'cancel']),
             [
-                'receipt_id' => $receiptId
+                'receipt_id' => $receiptId,
+                'price' => $price,
+                'name' => $name,
+                'reason' => $reason
             ],
             [
                 "Authorization: {$this->accessToken}"
