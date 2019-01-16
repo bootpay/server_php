@@ -61,6 +61,11 @@ class BootpayApi
         return static::$instances->subscribeCardBillingReserveInstance($data);
     }
 
+    public static function getSubscribeBillingKey($data)
+    {
+        return static::$instances->getSubscribeBillingKeyInstance($data);
+    }
+
     private function getRestUrl()
     {
         return $this->baseUrl[$this->mode];
@@ -120,6 +125,17 @@ class BootpayApi
         );
     }
 
+    public function getSubscribeBillingKeyInstance($data)
+    {
+        return self::post(
+            implode('/', [$this->getRestUrl(), 'request', 'card_rebill.json']),
+            $data,
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
     public function tokenInstance($data)
     {
         return self::post(implode('/', [$this->getRestUrl(), 'request', 'token']), $data);
@@ -154,6 +170,7 @@ class BootpayApi
     {
         $headers = array_merge(['Content-Type: application/json'], $headers);
         $ch = curl_init();
+//        curl_setopt($cHandler, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, $isPost);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
