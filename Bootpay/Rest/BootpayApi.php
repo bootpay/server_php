@@ -66,6 +66,11 @@ class BootpayApi
         return static::$instances->getSubscribeBillingKeyInstance($data);
     }
 
+    public static function startDelivery($data)
+    {
+        return static::$instances->startDeliveryInstance($data);
+    }
+
     private function getRestUrl()
     {
         return $this->baseUrl[$this->mode];
@@ -136,6 +141,20 @@ class BootpayApi
         );
     }
 
+    public function startDeliveryInstance($data)
+    {
+        return self::put(
+            implode('/', [$this->getRestUrl(), 'delivery', 'start', "{$data['receipt_id']}.json"]),
+            [
+                'delivery_no' => $data['delivery_no'],
+                'delivery_corp' => $data['delivery_corp']
+            ],
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
     public function tokenInstance($data)
     {
         return self::post(implode('/', [$this->getRestUrl(), 'request', 'token']), $data);
@@ -154,6 +173,12 @@ class BootpayApi
         return self::execute($ch);
     }
 
+    public static function put($url, $data, $headers = [])
+    {
+        $ch = self::getCurlHandler($url, $data, true, $headers, 'PUT');
+        return self::execute($ch);
+    }
+
     private static function execute($ch)
     {
         $response = curl_exec($ch);
@@ -166,7 +191,7 @@ class BootpayApi
         return $json;
     }
 
-    private static function getCurlHandler($url, $data = array(), $isPost = true, $headers = [])
+    private static function getCurlHandler($url, $data = array(), $isPost = true, $headers = [], $customRequest = null)
     {
         $headers = array_merge(['Content-Type: application/json'], $headers);
         $ch = curl_init();
@@ -174,7 +199,12 @@ class BootpayApi
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, $isPost);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        if ($isPost) curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        if ($isPost) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        }
+        if ($customRequest != null) {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $customRequest);
+        }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         return $ch;
     }
