@@ -7,11 +7,11 @@ spl_autoload_register('BootpayAutoload');
 
 use Bootpay\Rest\BootpayApi;
 
-$receiptId = '주문번호';
+$receiptId = '5c6dfb1fe13f3371b38f9008';
 
 $bootpay = BootpayApi::setConfig(
     '59bfc738e13f337dbd6ca48a',
-    'FQj3jOvQYp053nxzWxHSuw+cq3zUlSWZV2ec/8fkiyA=',
+    'pDc0NwlkEX3aSaHTp/PPL/i8vn5E/CqRChgyEp/gHD0=',
     'development'
 );
 
