@@ -66,6 +66,11 @@ class BootpayApi
         return static::$instances->getSubscribeBillingKeyInstance($data);
     }
 
+    public static function destroySubscribeBillingKey($billingKey)
+    {
+        return static::$instances->destroySubscribeBillingKeyInstance($billingKey);
+    }
+
     public static function startDelivery($data)
     {
         return static::$instances->startDeliveryInstance($data);
@@ -130,6 +135,17 @@ class BootpayApi
         );
     }
 
+    public function destroySubscribeBillingKeyInstance($billingKey)
+    {
+        return self::delete(
+            implode('/', [$this->getRestUrl(), 'subscribe', 'billing', "{$billingKey}.json"]),
+            [],
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
     public function getSubscribeBillingKeyInstance($data)
     {
         return self::post(
@@ -176,6 +192,12 @@ class BootpayApi
     public static function put($url, $data, $headers = [])
     {
         $ch = self::getCurlHandler($url, $data, true, $headers, 'PUT');
+        return self::execute($ch);
+    }
+
+    public static function delete($url, $data, $headers = [])
+    {
+        $ch = self::getCurlHandler($url, $data, true, $headers, 'DELETE');
         return self::execute($ch);
     }
 

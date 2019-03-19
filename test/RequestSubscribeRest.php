@@ -27,4 +27,7 @@ if ($response->status === 200) {
         'identify_number' => '[ 카드 비밀번호 2자리 ]'
     ]);
     var_dump($result);
+    # 발급 받은 Billing key를 Expire 시키는 함수
+    $result = $bootpay->destroySubscribeBillingKey('[ billing key ]');
+    var_dump($result);
 }
