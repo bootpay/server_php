@@ -61,6 +61,11 @@ class BootpayApi
         return static::$instances->subscribeCardBillingReserveInstance($data);
     }
 
+    public static function subscribeCardBillingReserveCancel($reserveId)
+    {
+        return static::$instances->subscribeCardBillingReserveCancelInstance($reserveId);
+    }
+
     public static function getSubscribeBillingKey($data)
     {
         return static::$instances->getSubscribeBillingKeyInstance($data);
@@ -129,6 +134,17 @@ class BootpayApi
         return self::post(
             implode('/', [$this->getRestUrl(), 'subscribe', 'billing', 'reserve.json']),
             $data,
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
+    public function subscribeCardBillingReserveCancelInstance($reserveId)
+    {
+        return self::delete(
+            implode('/', [$this->getRestUrl(), 'subscribe', 'billing', 'reserve', $reserveId]),
+            [],
             [
                 "Authorization: {$this->accessToken}"
             ]
