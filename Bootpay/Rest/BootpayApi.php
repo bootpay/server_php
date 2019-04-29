@@ -76,6 +76,11 @@ class BootpayApi
         return static::$instances->destroySubscribeBillingKeyInstance($billingKey);
     }
 
+    public static function submit($receiptId)
+    {
+        return static::$instances->submitInstance($receiptId);
+    }
+
     public static function startDelivery($data)
     {
         return static::$instances->startDeliveryInstance($data);
@@ -167,6 +172,19 @@ class BootpayApi
         return self::post(
             implode('/', [$this->getRestUrl(), 'request', 'card_rebill.json']),
             $data,
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
+    public function submitInstance($receiptId)
+    {
+        return self::post(
+            implode('/', [$this->getRestUrl(), 'submit.json']),
+            [
+                'receipt_id' => $receiptId
+            ],
             [
                 "Authorization: {$this->accessToken}"
             ]
