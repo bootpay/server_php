@@ -76,6 +76,21 @@ class BootpayApi
         return static::$instances->destroySubscribeBillingKeyInstance($billingKey);
     }
 
+    public static function remoteForm($data)
+    {
+        return static::$instances->remoteFormInstance($data);
+    }
+
+    public static function sendSMS($data)
+    {
+        return static::$instances->sendSMSInstance($data);
+    }
+
+    public static function sendLMS($data)
+    {
+        return static::$instances->sendLMSInstance($data);
+    }
+
     public static function submit($receiptId)
     {
         return static::$instances->submitInstance($receiptId);
@@ -95,6 +110,8 @@ class BootpayApi
     {
         return $this->accessToken = $token;
     }
+
+
 
     public function cancelInstance($receiptId, $price, $name, $reason)
     {
@@ -161,6 +178,40 @@ class BootpayApi
         return self::delete(
             implode('/', [$this->getRestUrl(), 'subscribe', 'billing', "{$billingKey}.json"]),
             [],
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
+    public function remoteFormInstance($data)
+    {
+        $data["application_id"] =  $this->defaultParams["application_id"];
+        return self::post(
+            implode('/', [$this->getRestUrl(), 'app', 'rest',  'remote_form.json']),
+            $data,
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
+    public function sendSMSInstance($data)
+    {
+        return self::post(
+            implode('/', [$this->getRestUrl(), 'push', 'sms.json']),
+            $data,
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
+    public function sendLMSInstance($data)
+    {
+        return self::post(
+            implode('/', [$this->getRestUrl(), 'push', 'lms.json']),
+            $data,
             [
                 "Authorization: {$this->accessToken}"
             ]
