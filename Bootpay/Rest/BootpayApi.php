@@ -86,6 +86,11 @@ class BootpayApi
         return static::$instances->startDeliveryInstance($data);
     }
 
+    public static function certificate($receiptId)
+    {
+        return static::$instances->certificateInstance($receiptId);
+    }
+
     private function getRestUrl()
     {
         return $this->baseUrl[$this->mode];
@@ -198,6 +203,19 @@ class BootpayApi
             [
                 'delivery_no' => $data['delivery_no'],
                 'delivery_corp' => $data['delivery_corp']
+            ],
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
+    public function certificateInstance($receiptId)
+    {
+        return self::post(
+            implode('/', [$this->getRestUrl(), 'certificate.json']),
+            [
+                'receipt_id' => $receiptId
             ],
             [
                 "Authorization: {$this->accessToken}"
