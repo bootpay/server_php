@@ -264,6 +264,7 @@ class BootpayApi
     {
         return self::get(
             implode('/', [$this->getRestUrl(), 'certificate', $receiptId]),
+            [],
             [
                 "Authorization: {$this->accessToken}"
             ]
