@@ -117,7 +117,6 @@ class BootpayApi
     }
 
 
-
     public function cancelInstance($receiptId, $price, $name, $reason)
     {
         return self::post(
@@ -191,9 +190,9 @@ class BootpayApi
 
     public function remoteFormInstance($data)
     {
-        $data["application_id"] =  $this->defaultParams["application_id"];
+        $data["application_id"] = $this->defaultParams["application_id"];
         return self::post(
-            implode('/', [$this->getRestUrl(), 'app', 'rest',  'remote_form.json']),
+            implode('/', [$this->getRestUrl(), 'app', 'rest', 'remote_form.json']),
             $data,
             [
                 "Authorization: {$this->accessToken}"
@@ -263,11 +262,8 @@ class BootpayApi
 
     public function certificateInstance($receiptId)
     {
-        return self::post(
-            implode('/', [$this->getRestUrl(), 'certificate.json']),
-            [
-                'receipt_id' => $receiptId
-            ],
+        return self::get(
+            implode('/', [$this->getRestUrl(), 'certificate', $receiptId]),
             [
                 "Authorization: {$this->accessToken}"
             ]
