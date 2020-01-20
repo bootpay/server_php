@@ -106,6 +106,11 @@ class BootpayApi
         return static::$instances->certificateInstance($receiptId);
     }
 
+    public static function requestPayment($data)
+    {
+        return static::$instances->requestPaymentInstance($data);
+    }
+
     private function getRestUrl()
     {
         return $this->baseUrl[$this->mode];
@@ -265,6 +270,17 @@ class BootpayApi
         return self::get(
             implode('/', [$this->getRestUrl(), 'certificate', $receiptId]),
             [],
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
+    }
+
+    public function requestPaymentInstance($data)
+    {
+        return self::post(
+            implode('/', [$this->getRestUrl(), 'request', 'payment.json']),
+            $data,
             [
                 "Authorization: {$this->accessToken}"
             ]
