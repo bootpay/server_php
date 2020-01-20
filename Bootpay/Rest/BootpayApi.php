@@ -18,6 +18,7 @@ class BootpayApi
 
     private $baseUrl = [
         'development' => 'https://dev-api.bootpay.co.kr',
+        'stage' => 'https://stage-api.bootpay.co.kr',
         'production' => 'https://api.bootpay.co.kr'
     ];
 
