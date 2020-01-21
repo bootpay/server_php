@@ -1,7 +1,4 @@
 <?php
-/*
- * 취소 테스트 예제 입니다.
- */
 require_once('../autoload.php');
 spl_autoload_register('BootpayAutoload');
 
