@@ -112,6 +112,11 @@ class BootpayApi
         return static::$instances->requestPaymentInstance($data);
     }
 
+    public static function getUserToken($data)
+    {
+        return static::$instances->getUserTokenInstance($data);
+    }
+
     private function getRestUrl()
     {
         return $this->baseUrl[$this->mode];
@@ -291,6 +296,17 @@ class BootpayApi
     public function tokenInstance($data)
     {
         return self::post(implode('/', [$this->getRestUrl(), 'request', 'token']), $data);
+    }
+
+    public function getUserTokenInstance($data)
+    {
+        return self::post(
+            implode('/', [$this->getRestUrl(), 'request', 'user', 'token.json']),
+            $data,
+            [
+                "Authorization: {$this->accessToken}"
+            ]
+        );
     }
 
 //  공통 부분
